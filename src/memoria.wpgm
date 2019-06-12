@@ -1,0 +1,40 @@
+import wollok.game.*
+import iconos.*
+import player.*
+
+
+program laGranjaGame {
+//	CONFIG	
+	game.title("El juego de la memoria")
+	game.height(10)
+	game.width(10)
+	game.boardGround("fondo1.jpg")
+//	VISUALES
+	game.addVisual(player)
+	game.addVisualIn(new Icono(), game.at(2, 2))
+	game.addVisualIn(new Icono(), game.at(2, 4))
+	game.addVisualIn(new Icono(), game.at(2, 6))
+	game.addVisualIn(new Icono(), game.at(2, 8))
+	game.addVisualIn(new Icono(), game.at(4, 2))
+	game.addVisualIn(new Icono(), game.at(4, 4))
+	game.addVisualIn(new Icono(), game.at(4, 6))
+	game.addVisualIn(new Icono(), game.at(4, 8))
+	game.addVisualIn(new Icono(), game.at(6, 2))
+	game.addVisualIn(new Icono(), game.at(6, 4))
+	game.addVisualIn(new Icono(), game.at(6, 6))
+	game.addVisualIn(new Icono(), game.at(6, 8))
+	game.addVisualIn(new Icono(), game.at(8, 2))
+	game.addVisualIn(new Icono(), game.at(8, 4))
+	game.addVisualIn(new Icono(), game.at(8, 6))
+	game.addVisualIn(new Icono(), game.at(8, 8))
+
+//	TECLADO
+	keyboard.up().onPressDo{ player.move(player.position().up(1)); }
+	keyboard.down().onPressDo{ player.move(player.position().down(1)); }
+	keyboard.left().onPressDo{ player.move(player.position().left(1)); }
+	keyboard.right().onPressDo{ player.move(player.position().right(1)); }
+	keyboard.space().onPressDo{ player.ver() }
+//	START
+	game.errorReporter(player)
+	game.start()
+}
