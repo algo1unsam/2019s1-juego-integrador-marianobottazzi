@@ -21,7 +21,9 @@ object player {
 			game.say(self, "aca no hay nada") 
 		else {
 			self.elementoAca().cambiarLado()
-						
+			self.agregarDelay()
+			self.removeDelay()			
+			self.elementoAca().cambiarLado()
 		}
 	}
 	
@@ -45,8 +47,6 @@ object player {
 		game.removeTickEvent("delay")
 		game.removeTickEvent("remove")
 	}
-	
-	
 }
 
 object tablero {
@@ -70,7 +70,8 @@ object posiciones {
 	}
 	
 	method repartirPosicion() {
-		var pos = todasLasPosiciones.get((0.randomUpTo(15).round(0)))
+		var pos = todasLasPosiciones.anyOne()
+//		var pos = todasLasPosiciones.get(0.randomUpTo(15).roundUp(0))
 		todasLasPosiciones.remove(pos)
 		return pos
 	}
