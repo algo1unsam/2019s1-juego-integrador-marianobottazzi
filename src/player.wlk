@@ -21,7 +21,7 @@ object player {
 			game.say(self, "aca no hay nada") 
 		else {
 			self.elementoAca().cambiarLado()
-			
+						
 		}
 	}
 	
@@ -53,12 +53,16 @@ object tablero {
 
 	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
 	
-	method repartirImagen() = imagenes.first()
+	method repartirImagen() { 
+		var img = imagenes.first() 
+		imagenes.remove(img)
+		return img
+		}
 	
 }
 
 object posiciones {
-	var property posiciones = #{ 
+	var property todasLasPosiciones = #{ 
 		game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), 
 		game.at(4, 2), game.at(4, 4), game.at(4, 6), game.at(4, 8), 
 		game.at(6, 2), game.at(6, 4), game.at(6, 6), game.at(6, 8), 
@@ -66,8 +70,8 @@ object posiciones {
 	}
 	
 	method repartirPosicion() {
-		var pos = posiciones.anyOne()
-		posiciones.remove(pos)
+		var pos = todasLasPosiciones.get((0.randomUpTo(15).round(0)))
+		todasLasPosiciones.remove(pos)
 		return pos
 	}
 }
