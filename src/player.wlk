@@ -34,7 +34,6 @@ object player {
 			game.say(self, "aca no hay nada") 
 		else {
 			self.comprobarEleccion(self.elementoAca())
-			self.comprobarFinDeNivel()
 		}
 	}
 	
@@ -49,22 +48,29 @@ object player {
 	method coincidencia() = imagenesElegidas.first().imagen2() == imagenesElegidas.get(1).imagen2()  // imagenes.all({ img => img.image() })
 	
 	method restaurarImagenes() { 
-		imagenesElegidas.forEach({ img => self.cambiarConDelay(img, 3000) })
+		imagenesElegidas.forEach({ img => self.cambiarConDelay(img, 1000) })
 		imagenesElegidas.clear()
 	}
 
 	method comprobarEleccion(unaImagen) {
 		self.agregarImagen(unaImagen)
 		unaImagen.cambiarLado()
-		if(self.tamanioLista(2)) 
+		if(self.tamanioLista(2)){ 
 			if(!self.coincidencia())
 				self.restaurarImagenes()
-			else cont++
+			else {
+				imagenesElegidas.clear()
+				cont++
+				self.comprobarFinDeNivel(cont)
+				}
+		}
 	}	
 	
-	method comprobarFinDeNivel() {
-		if(cont == 15) game.say(self, "Gane el juego !!")
+	method comprobarFinDeNivel(contador) {
+		if(contador == 8) game.say(self, "Terminò el juego !!")
+		tablero.reiniciarJuego()
 	}
+	
 }
 
 object tablero {
@@ -73,25 +79,40 @@ object tablero {
 		"kickstarter.png", "spotify.png", "twitter.png", "instagram.png", 
 		"steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", 
 		"twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
+
+	var property imagenesCopia = imagenes 
+	
+	method inicializarImagenes() {	imagenesCopia = imagenes }
 	
 	method repartirImagen() { 
-		var img = imagenes.first() 
+		var img = imagenesCopia.first() 
 		imagenes.remove(img)
 		return img
-	}	
+	}
+	
+	method reiniciarJuego() {
+		self.inicializarImagenes()
+		posiciones.inicializarPosiciones()		
+	}
+		
 }
 
 object posiciones {
-	var property todasLasPosiciones = #{ 
+	
+	const property todasLasPosiciones = #{ 
 		game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), 
 		game.at(4, 2), game.at(4, 4), game.at(4, 6), game.at(4, 8), 
 		game.at(6, 2), game.at(6, 4), game.at(6, 6), game.at(6, 8), 
 		game.at(8, 2), game.at(8, 4), game.at(8, 6), game.at(8, 8) 
 	}
 	
+	var todasLasPosicionesCopia = todasLasPosiciones 
+	
+	method inicializarPosiciones() { todasLasPosicionesCopia = todasLasPosiciones }
+	
 	method repartirPosicion() {
-		var pos = todasLasPosiciones.anyOne() // siempre salen en el mismo orden
-		todasLasPosiciones.remove(pos)
+		var pos = todasLasPosicionesCopia.anyOne() 
+		todasLasPosicionesCopia.remove(pos)
 		return pos
 	}
 }
