@@ -27,7 +27,7 @@ program laGranjaGame {
 	game.addVisual(new Icono())
 	game.addVisual(new Icono())
 	game.addVisual(new Icono())
-	
+	 
 //	TECLADO
 	keyboard.up().onPressDo{ player.move(player.position().up(1)); }
 	keyboard.down().onPressDo{ player.move(player.position().down(1)); }

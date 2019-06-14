@@ -3,7 +3,8 @@ import iconos.*
 
 object player {
 
-	var property imagenesCambiadas = []
+	var cont = 0
+	var property imagenesElegidas = []
 	var property position = game.at(1, 1)
 
 	method image() = "mano1.png"
@@ -20,26 +21,14 @@ object player {
 		if (self.acaNoHayNada()) 
 			game.say(self, "aca no hay nada") 
 		else {
-			self.elementoAca().cambiarLado()
-			self.agregarDelay()
-			self.removeDelay()			
-			self.elementoAca().cambiarLado()
+			self.comprobarEleccion(self.elementoAca())
+			self.comprobarFinDeNivel()
 		}
 	}
 	
-	method agregarImagen(unaImagen) { imagenesCambiadas.add(unaImagen) }
-
-	method comprobarConcidencia() = imagenesCambiadas.all({ img => img.image() })
-	
-	method restaurarImagenes() {
-		imagenesCambiadas.first().cambiarLado()
-		imagenesCambiadas.get(1).cambiarLado()
-		imagenesCambiadas.clear()
-	}
-	
-	method agregarDelay() {
-		game.onTick(2000, "delay", { => self.elementoAca().cambiarLado() })
-		game.onTick(3500, "remove", { => self.removeDelay()})
+	method cambiarConDelay(unaImagen, milisegundos) {
+		game.onTick(milisegundos, "delay", { => unaImagen.cambiarLado() })
+		game.onTick(milisegundos + 500, "remove", { => self.removeDelay()})
 	}
 	
 	method removeDelay(){
@@ -47,11 +36,38 @@ object player {
 		game.removeTickEvent("delay")
 		game.removeTickEvent("remove")
 	}
+	
+	method agregarImagen(unaImagen) { imagenesElegidas.add(unaImagen) }
+
+	method tamanioLista(unTamanio) = imagenesElegidas.size() == unTamanio
+
+	method coincidencia() = imagenesElegidas.first().imagen2() == imagenesElegidas.get(1).imagen2()  // imagenes.all({ img => img.image() })
+	
+	method restaurarImagenes() { 
+		imagenesElegidas.forEach({ img => self.cambiarConDelay(img, 3000) })
+		imagenesElegidas.asSet().clear()
+	}
+
+	method comprobarEleccion(unaImagen) {
+		self.agregarImagen(unaImagen)
+		self.cambiarConDelay(unaImagen, 1000)
+		if(self.tamanioLista(2)) 
+			if(!self.coincidencia())
+				self.restaurarImagenes()
+			else cont++
+	}	
+	
+	method comprobarFinDeNivel() {
+		if(cont == 15) game.say(self, "Gane el juego !!")
+	}
 }
 
 object tablero {
 
-	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
+	const property imagenes = [ "steam.png", "youtube.png", "skype.png", 
+		"kickstarter.png", "spotify.png", "twitter.png", "instagram.png", 
+		"steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", 
+		"twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
 	
 	method repartirImagen() { 
 		var img = imagenes.first() 
@@ -70,8 +86,7 @@ object posiciones {
 	}
 	
 	method repartirPosicion() {
-		var pos = todasLasPosiciones.anyOne()
-//		var pos = todasLasPosiciones.get(0.randomUpTo(15).roundUp(0))
+		var pos = todasLasPosiciones.anyOne() // siempre salen en el mismo orden
 		todasLasPosiciones.remove(pos)
 		return pos
 	}

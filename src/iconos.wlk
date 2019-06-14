@@ -2,7 +2,7 @@ import wollok.game.*
 import player.*
 
 class Icono {
-
+ 
 	var property position = posiciones.repartirPosicion()
 	var property imagen1 = "tapa.jpg"
 	var property imagen2 = tablero.repartirImagen()
