@@ -11,22 +11,7 @@ program laGranjaGame {
 	game.boardGround("fondo1.jpg")
 //	VISUALES
 	game.addVisual(player)
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
-	game.addVisual(new Icono())
+	16.times( { i =>  game.addVisual(new Icono()) }) 
 	 
 //	TECLADO
 	keyboard.up().onPressDo{ player.move(player.position().up(1)); }

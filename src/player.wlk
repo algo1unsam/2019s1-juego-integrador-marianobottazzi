@@ -22,7 +22,10 @@ object player {
 	method image() = "mano1.png"
 
 	method move(nuevaPosicion) {
-		self.position(nuevaPosicion)
+		if(nuevaPosicion.x() >= 0 && nuevaPosicion.y() >= 0)	
+			self.position(nuevaPosicion)
+		else
+			game.say(self, "me voy a caer del tablero!")
 	}
 
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
@@ -67,8 +70,11 @@ object player {
 	}	
 	
 	method comprobarFinDeNivel(contador) {
-		if(contador == 8) game.say(self, "Terminò el juego !!")
-		tablero.reiniciarJuego()
+		if(contador == 8) {
+			game.say(self, "Terminò el juego !!")
+			scheduler.schedule(2000, { => game.clear() })
+			tablero.reiniciarJuego()
+		}
 	}
 	
 }
@@ -92,9 +98,11 @@ object tablero {
 	
 	method reiniciarJuego() {
 		self.inicializarImagenes()
-		posiciones.inicializarPosiciones()		
+		posiciones.inicializarPosiciones()
+		game.addVisual(player)
+		16.times( { i =>  game.addVisual(new Icono()) }) 
 	}
-		
+	
 }
 
 object posiciones {
