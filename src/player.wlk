@@ -1,6 +1,18 @@
 import wollok.game.*
 import iconos.*
 
+object scheduler {
+	var count = 0
+	method schedule(milliseconds, action) {
+		count += 1
+		const name = "scheduler" + count
+		game.onTick(milliseconds, name, { => 
+			action.apply()
+			game.removeTickEvent(name)
+		})
+	}
+}
+
 object player {
 
 	var cont = 0
@@ -27,14 +39,7 @@ object player {
 	}
 	
 	method cambiarConDelay(unaImagen, milisegundos) {
-		game.onTick(milisegundos, "delay", { => unaImagen.cambiarLado() })
-		game.onTick(milisegundos + 500, "remove", { => self.removeDelay()})
-	}
-	
-	method removeDelay(){
-		console.println("remuevo delay onTick")
-		game.removeTickEvent("delay")
-		game.removeTickEvent("remove")
+		scheduler.schedule(milisegundos, { => unaImagen.cambiarLado() })
 	}
 	
 	method agregarImagen(unaImagen) { imagenesElegidas.add(unaImagen) }
@@ -45,12 +50,12 @@ object player {
 	
 	method restaurarImagenes() { 
 		imagenesElegidas.forEach({ img => self.cambiarConDelay(img, 3000) })
-		imagenesElegidas.asSet().clear()
+		imagenesElegidas.clear()
 	}
 
 	method comprobarEleccion(unaImagen) {
 		self.agregarImagen(unaImagen)
-		self.cambiarConDelay(unaImagen, 1000)
+		unaImagen.cambiarLado()
 		if(self.tamanioLista(2)) 
 			if(!self.coincidencia())
 				self.restaurarImagenes()
@@ -73,8 +78,7 @@ object tablero {
 		var img = imagenes.first() 
 		imagenes.remove(img)
 		return img
-		}
-	
+	}	
 }
 
 object posiciones {
