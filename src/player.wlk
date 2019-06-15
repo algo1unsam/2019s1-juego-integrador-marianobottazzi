@@ -20,7 +20,7 @@ object player {
 
 	var cont = 0
 	var property imagenesElegidas = []
-	var property position = game.at(1, 1)
+	var property position = game.origin()
 
 	method image() = "mano1.png"
 
@@ -115,7 +115,6 @@ object nivelUno {
 				game.clear() 
 				nivelDos.iniciarNivel()
 			})
-			
 		}
 	}
 
@@ -136,8 +135,10 @@ object nivelDos {
 	method comprobarFinDeNivel(contador) {
 		if (contador == imagenes.size()/2) {
 			game.say(self, "Terminò el juego !!")
-			scheduler.schedule(2000, { => game.clear()})
-			self.iniciarNivel()
+			scheduler.schedule(2000, { => 
+				game.clear() 
+				self.iniciarNivel()
+			})
 		}
 	}
 
