@@ -95,25 +95,29 @@ object ubicacion {
 
 }
 
-object nivelUno {
-
-	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png" ]
-	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(4, 2), game.at(4, 4), game.at(6, 2), game.at(6, 4), game.at(8, 2), game.at(8, 4) }
-
-	method iniciarNivel() {
+object inicio {
+	
+	method iniciarNivel(imagenes, posiciones) {
 		tablero.todasLasImagenes().addAll(imagenes)
 		ubicacion.todasLasPosiciones().addAll(posiciones)
 		game.addVisual(player)
 		imagenes.size().times({ i => game.addVisual(new Icono())})
 	}
+	
+}
+
+object nivelUno {
+
+	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png" ]
+	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(4, 2), game.at(4, 4), game.at(6, 2), game.at(6, 4), game.at(8, 2), game.at(8, 4) }
 
 	method comprobarFinDeNivel(contador) {
 		console.println(contador)
-		if (contador == 4) {
-			game.say(player, "Terminò el juego !!")
+		if (contador == imagenes.size()/2) {
+			game.say(player, "Terminò el nivel !!")
 			scheduler.schedule(2000, { => 
-				game.clear() 
-				nivelDos.iniciarNivel()
+				game.clear()
+				inicio.iniciarNivel(nivelDos.imagenes(), nivelDos.posiciones()) 
 			})
 		}
 	}
@@ -122,22 +126,37 @@ object nivelUno {
 
 object nivelDos {
 
-	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
-	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), game.at(4, 2), game.at(4, 4), game.at(4, 6), game.at(4, 8), game.at(6, 2), game.at(6, 4), game.at(6, 6), game.at(6, 8), game.at(8, 2), game.at(8, 4), game.at(8, 6), game.at(8, 8) }
-
-	method iniciarNivel() {
-		tablero.todasLasImagenes().addAll(imagenes)
-		ubicacion.todasLasPosiciones().addAll(posiciones)
-		game.addVisual(player)
-		imagenes.size().times({ i => game.addVisual(new Icono())})
-	}
+	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png" ]
+	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), game.at(4, 4), game.at(4, 6), game.at(4, 8), game.at(6, 6), game.at(6, 8), game.at(8, 8) }
 
 	method comprobarFinDeNivel(contador) {
 		if (contador == imagenes.size()/2) {
 			game.say(self, "Terminò el juego !!")
+			game.say(self, "vuelve a nivel uno")
 			scheduler.schedule(2000, { => 
 				game.clear() 
-				self.iniciarNivel()
+				inicio.iniciarNivel(nivelTres.imagenes(), nivelTres.posiciones()) 
+			})
+		}
+	}
+
+}
+
+
+object nivelTres {
+
+	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
+	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), game.at(4, 2), game.at(4, 4), game.at(4, 6), game.at(4, 8), game.at(6, 2), game.at(6, 4), game.at(6, 6), game.at(6, 8), game.at(8, 2), game.at(8, 4), game.at(8, 6), game.at(8, 8) }
+
+	method comprobarFinDeNivel(contador) {
+		if (contador == imagenes.size()/2) {
+			game.say(self, "Terminò el juego !!")
+			scheduler.schedule(1000, { => 
+				game.say(self, "vuelve a nivel uno")	
+				})
+			scheduler.schedule(2000, { => 
+				game.clear() 
+				inicio.iniciarNivel(nivelUno.imagenes(), nivelUno.posiciones()) 
 			})
 		}
 	}

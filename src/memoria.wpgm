@@ -8,7 +8,7 @@ program laGranjaGame {
 	game.height(10)
 	game.width(10)
 	game.boardGround("fondo1.jpg")
-	nivelUno.iniciarNivel()
+	inicio.iniciarNivel(nivelUno.imagenes(), nivelUno.posiciones())
 //	TECLADO
 	keyboard.up().onPressDo{ player.move(player.position().up(1)); }
 	keyboard.down().onPressDo{ player.move(player.position().down(1)); }
