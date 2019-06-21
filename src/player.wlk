@@ -83,8 +83,7 @@ object player {
 			if (!self.coincidencia()) self.restaurarImagenes() else {
 				imagenesElegidas.clear()
 				cont++
-				self.comprobarFinDeNivel(nivelTres, cont)
-//				self.comprobarFinDeNivel(nivelActual, cont)
+				self.comprobarFinDeNivel(nivelActual, cont)
 			}
 		}
 	}
@@ -95,7 +94,7 @@ object player {
 			game.say(self, "Terminò el nivel !!")
 			scheduler.schedule(2000, { =>
 				game.clear()
-				inicio.iniciarNivel(nivelSiguiente.imagenes(), nivelSiguiente.posiciones())
+				inicio.iniciarNivel(nivelSiguiente)
 			})
 		}
 	}	
@@ -133,29 +132,26 @@ object inicio {
 
 	var property niveles = [ nivelUno, nivelDos, nivelTres ]
 
-	method nivelActual() {
-		if (niveles.asSet().isEmpty()) niveles.addAll([ nivelUno, nivelDos, nivelTres ])
-		var nivel = niveles.first()
+	method nivelSiguiente() {
+		if (niveles.asSet().isEmpty()) niveles.addAll([ nivelDos, nivelTres, nivelUno ])
+		var nivel = niveles.first(1)
 		niveles.remove(nivel)
 		return nivel
 	}
 
-	method iniciarNivel(imagenes, posiciones) {
-//		player.nivelActual(self.nivelActual())
-//		player.nivelSiguiente(niveles.first())
-		player.nivelActual(nivelTres)
-		player.nivelSiguiente(nivelUno)
-		
-		tablero.todasLasImagenes().addAll(imagenes)
-		ubicacion.todasLasPosiciones().addAll(posiciones)
+	method iniciarNivel(unNivel) {
+		player.nivelActual(unNivel)
+		player.nivelSiguiente(self.nivelSiguiente())
+		tablero.todasLasImagenes().addAll(unNivel.imagenes())
+		ubicacion.todasLasPosiciones().addAll(unNivel.posiciones())
 		game.addVisual(player)
 		keyboard.up().onPressDo{ player.move(player.position().up(1));}
 		keyboard.down().onPressDo{ player.move(player.position().down(1));}
 		keyboard.left().onPressDo{ player.move(player.position().left(1));}
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
-		imagenes.size().times({ i => game.addVisual(new Icono())})
+		unNivel.imagenes().size().times({ i => game.addVisual(new Icono())})
 	}
-
+	
 }
 
