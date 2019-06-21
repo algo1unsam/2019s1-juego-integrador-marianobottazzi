@@ -28,6 +28,19 @@ object tablero {
 
 }
 
+
+object ubicacion {
+
+	var property todasLasPosiciones = #{}
+
+	method repartirPosicion() {
+		var pos = todasLasPosiciones.anyOne()
+		todasLasPosiciones.remove(pos)
+		return pos
+	}
+
+}
+
 object player {
 
 	var cont = 0
@@ -78,18 +91,6 @@ object player {
 		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
 			self.comprobarEleccion(self.elementoAca())
 		}
-	}
-
-}
-
-object ubicacion {
-
-	var property todasLasPosiciones = #{}
-
-	method repartirPosicion() {
-		var pos = todasLasPosiciones.anyOne()
-		todasLasPosiciones.remove(pos)
-		return pos
 	}
 
 }
