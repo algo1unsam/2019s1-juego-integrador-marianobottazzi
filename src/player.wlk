@@ -45,6 +45,7 @@ object player {
 
 	var cont = 0
 	var property nivelActual = null
+	var property nivelSiguiente = null
 	var property imagenesElegidas = []
 	var property position = game.origin()
 
@@ -82,10 +83,22 @@ object player {
 			if (!self.coincidencia()) self.restaurarImagenes() else {
 				imagenesElegidas.clear()
 				cont++
-				nivelActual.comprobarFinDeNivel(cont)
+				self.comprobarFinDeNivel(nivelTres, cont)
+//				self.comprobarFinDeNivel(nivelActual, cont)
 			}
 		}
 	}
+	
+	method comprobarFinDeNivel(unNivel, contador) {
+		console.println(contador)
+		if (contador == unNivel.imagenes().size() / 2) {
+			game.say(self, "Terminò el nivel !!")
+			scheduler.schedule(2000, { =>
+				game.clear()
+				inicio.iniciarNivel(nivelSiguiente.imagenes(), nivelSiguiente.posiciones())
+			})
+		}
+	}	
 	
 	method ver() {
 		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
@@ -100,17 +113,6 @@ object nivelUno {
 	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png" ]
 	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(4, 2), game.at(4, 4), game.at(6, 4), game.at(6, 6), game.at(8, 4), game.at(8, 6) }
 
-	method comprobarFinDeNivel(contador) {
-		console.println(contador)
-		if (contador == imagenes.size() / 2) {
-			game.say(player, "Terminò el nivel !!")
-			scheduler.schedule(2000, { =>
-				game.clear()
-				inicio.iniciarNivel(nivelDos.imagenes(), nivelDos.posiciones())
-			})
-		}
-	}
-
 }
 
 object nivelDos {
@@ -118,32 +120,12 @@ object nivelDos {
 	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png" ]
 	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), game.at(4, 4), game.at(4, 6), game.at(4, 8), game.at(6, 6), game.at(6, 8), game.at(8, 8) }
 
-	method comprobarFinDeNivel(contador) {
-		if (contador == imagenes.size() / 2) {
-			game.say(self, "Terminò el nivel !!")
-			scheduler.schedule(2000, { =>
-				game.clear()
-				inicio.iniciarNivel(nivelTres.imagenes(), nivelTres.posiciones())
-			})
-		}
-	}
-
 }
 
 object nivelTres {
 
 	const property imagenes = [ "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "steam.png", "youtube.png", "skype.png", "kickstarter.png", "spotify.png", "twitter.png", "instagram.png", "yelp.png", "yelp.png" ]
 	const property posiciones = #{ game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8), game.at(4, 2), game.at(4, 4), game.at(4, 6), game.at(4, 8), game.at(6, 2), game.at(6, 4), game.at(6, 6), game.at(6, 8), game.at(8, 2), game.at(8, 4), game.at(8, 6), game.at(8, 8) }
-
-	method comprobarFinDeNivel(contador) {
-		if (contador == imagenes.size() / 2) {
-			game.say(self, "Terminò el juego !!")
-			scheduler.schedule(2000, { =>
-				game.clear()
-				inicio.iniciarNivel(nivelUno.imagenes(), nivelUno.posiciones())
-			})
-		}
-	}
 
 }
 
@@ -159,7 +141,11 @@ object inicio {
 	}
 
 	method iniciarNivel(imagenes, posiciones) {
-		player.nivelActual(self.nivelActual())
+//		player.nivelActual(self.nivelActual())
+//		player.nivelSiguiente(niveles.first())
+		player.nivelActual(nivelTres)
+		player.nivelSiguiente(nivelUno)
+		
 		tablero.todasLasImagenes().addAll(imagenes)
 		ubicacion.todasLasPosiciones().addAll(posiciones)
 		game.addVisual(player)
