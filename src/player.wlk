@@ -46,13 +46,11 @@ object player {
 	method image() = "mano1.png"
 
 	method move(nuevaPosicion) {
-		if (nuevaPosicion.x() <= 0 && nuevaPosicion.y() <= 0) game.say(self, "me voy a caer del tablero!")
+		if ((nuevaPosicion.x() >= 0 && nuevaPosicion.x() <= 9) && (nuevaPosicion.y() >= 0 && nuevaPosicion.y() <= 9)) 
+			self.position(nuevaPosicion)
 		else 
-			if(nuevaPosicion.x() >= 10 && nuevaPosicion.y() >= 10)
-				game.say(self, "me voy a caer del tablero!")
-			else 
-				self.position(nuevaPosicion) 
-	}
+			game.say(self, "me voy a caer del tablero!") 
+		}
 
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
 
