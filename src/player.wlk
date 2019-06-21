@@ -45,7 +45,12 @@ object player {
 	method image() = "mano1.png"
 
 	method move(nuevaPosicion) {
-		if (nuevaPosicion.x() >= 0 && nuevaPosicion.y() >= 0) self.position(nuevaPosicion) else game.say(self, "me voy a caer del tablero!")
+		if (nuevaPosicion.x() <= 0 && nuevaPosicion.y() <= 0) game.say(self, "me voy a caer del tablero!")
+		else 
+			if(nuevaPosicion.x() >= 10 && nuevaPosicion.y() >= 10)
+				game.say(self, "me voy a caer del tablero!")
+			else 
+				self.position(nuevaPosicion) 
 	}
 
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
@@ -82,7 +87,7 @@ object player {
 			if (!self.coincidencia()) self.restaurarImagenes() else {
 				imagenesElegidas.clear()
 				cont++
-				tablero.nivelActual().comprobarFinDeNivel(cont)
+				inicio.nivel().comprobarFinDeNivel(cont)
 			}
 		}
 	}
@@ -156,8 +161,10 @@ object nivelTres {
 
 
 object inicio {
-
+	
+	var property nivelActual = null
 	method iniciarNivel(imagenes, posiciones) {
+		nivelActual = tablero.nivelActual()
 		game.boardGround("fondo1.jpg")
 		tablero.todasLasImagenes().addAll(imagenes)
 		ubicacion.todasLasPosiciones().addAll(posiciones)
