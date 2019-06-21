@@ -29,17 +29,11 @@ object tablero {
 
 	method nivelActual() {
 		var nivel = niveles.first()
-		if(nivel == nivelTres) {
-			niveles.remove(nivel)
-			niveles.addAll([nivelUno, nivelDos, nivelTres])
-		}
-		else {
-			nivel = niveles.first()
-			niveles.remove(nivel)
-			}
+		niveles.remove(nivel)
+		if(niveles.asSet().isEmpty())
+			niveles.addAll([nivelUno, nivelDos, nivelTres]) 
 		return nivel
-	}
-
+		}
 }
 
 object player {
