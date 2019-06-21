@@ -39,6 +39,7 @@ object tablero {
 object player {
 
 	var cont = 0
+	var nivel = tablero.nivelActual()
 	var property imagenesElegidas = []
 	var property position = game.origin()
 
@@ -87,7 +88,7 @@ object player {
 			if (!self.coincidencia()) self.restaurarImagenes() else {
 				imagenesElegidas.clear()
 				cont++
-				inicio.nivel().comprobarFinDeNivel(cont)
+				nivel.comprobarFinDeNivel(cont)
 			}
 		}
 	}
@@ -132,9 +133,9 @@ object nivelDos {
 
 	method comprobarFinDeNivel(contador) {
 		if (contador == imagenes.size() / 2) {
+			game.say(self, "Terminò el nivel !!")
 			scheduler.schedule(2000, { =>
 				game.clear()
-				game.say(self, "Terminò el juego !!")
 				inicio.iniciarNivel(nivelTres.imagenes(), nivelTres.posiciones())
 			})
 		}
@@ -162,9 +163,7 @@ object nivelTres {
 
 object inicio {
 	
-	var property nivelActual = null
 	method iniciarNivel(imagenes, posiciones) {
-		nivelActual = tablero.nivelActual()
 		game.boardGround("fondo1.jpg")
 		tablero.todasLasImagenes().addAll(imagenes)
 		ubicacion.todasLasPosiciones().addAll(posiciones)
