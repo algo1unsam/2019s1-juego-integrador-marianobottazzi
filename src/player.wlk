@@ -134,7 +134,7 @@ object inicio {
 
 	method nivelSiguiente() {
 		if (niveles.asSet().isEmpty()) niveles.addAll([ nivelDos, nivelTres, nivelUno ])
-		var nivel = niveles.first(1)
+		var nivel = niveles.first()
 		niveles.remove(nivel)
 		return nivel
 	}
