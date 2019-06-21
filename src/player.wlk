@@ -16,10 +16,35 @@ object scheduler {
 
 }
 
+object tablero {
+
+	var property todasLasImagenes = []
+	var property niveles = [ nivelUno, nivelDos, nivelTres ]
+
+	method repartirImagen() {
+		var img = todasLasImagenes.anyOne()
+		todasLasImagenes.remove(img)
+		return img
+	}
+
+	method nivelActual() {
+		var nivel = niveles.first()
+		if(nivel == nivelTres) {
+			niveles.remove(nivel)
+			niveles.addAll([nivelUno, nivelDos, nivelTres])
+		}
+		else {
+			nivel = niveles.first()
+			niveles.remove(nivel)
+			}
+		return nivel
+	}
+
+}
+
 object player {
 
 	var cont = 0
-	var nivel = tablero.nivelActual()
 	var property imagenesElegidas = []
 	var property position = game.origin()
 
@@ -63,31 +88,13 @@ object player {
 			if (!self.coincidencia()) self.restaurarImagenes() else {
 				imagenesElegidas.clear()
 				cont++
-				nivel.comprobarFinDeNivel(cont)
+				tablero.nivelActual().comprobarFinDeNivel(cont)
 			}
 		}
 	}
 
 }
 
-object tablero {
-
-	var property todasLasImagenes = []
-
-	method repartirImagen() {
-		var img = todasLasImagenes.anyOne()
-		todasLasImagenes.remove(img)
-		return img
-	}
-
-	method nivelActual() {
-		if(todasLasImagenes.size() == 8) return nivelUno
-		else 
-			if(todasLasImagenes.size() == 10) return nivelDos
-			else return nivelTres
-	}
-
-}
 
 object ubicacion {
 
@@ -97,23 +104,6 @@ object ubicacion {
 		var pos = todasLasPosiciones.anyOne()
 		todasLasPosiciones.remove(pos)
 		return pos
-	}
-
-}
-
-object inicio {
-
-	method iniciarNivel(imagenes, posiciones) {
-		game.boardGround("fondo1.jpg")
-		tablero.todasLasImagenes().addAll(imagenes)
-		ubicacion.todasLasPosiciones().addAll(posiciones)
-		game.addVisual(player)
-		keyboard.up().onPressDo{ player.move(player.position().up(1));}
-		keyboard.down().onPressDo{ player.move(player.position().down(1));}
-		keyboard.left().onPressDo{ player.move(player.position().left(1));}
-		keyboard.right().onPressDo{ player.move(player.position().right(1));}
-		keyboard.space().onPressDo{ player.ver()}
-		imagenes.size().times({ i => game.addVisual(new Icono())})
 	}
 
 }
@@ -143,9 +133,9 @@ object nivelDos {
 
 	method comprobarFinDeNivel(contador) {
 		if (contador == imagenes.size() / 2) {
-			game.say(self, "Terminò el nivel !!")
 			scheduler.schedule(2000, { =>
 				game.clear()
+				game.say(self, "Terminò el juego !!")
 				inicio.iniciarNivel(nivelTres.imagenes(), nivelTres.posiciones())
 			})
 		}
@@ -166,6 +156,24 @@ object nivelTres {
 				inicio.iniciarNivel(nivelUno.imagenes(), nivelUno.posiciones())
 			})
 		}
+	}
+
+}
+
+
+object inicio {
+
+	method iniciarNivel(imagenes, posiciones) {
+		game.boardGround("fondo1.jpg")
+		tablero.todasLasImagenes().addAll(imagenes)
+		ubicacion.todasLasPosiciones().addAll(posiciones)
+		game.addVisual(player)
+		keyboard.up().onPressDo{ player.move(player.position().up(1));}
+		keyboard.down().onPressDo{ player.move(player.position().down(1));}
+		keyboard.left().onPressDo{ player.move(player.position().left(1));}
+		keyboard.right().onPressDo{ player.move(player.position().right(1));}
+		keyboard.space().onPressDo{ player.ver()}
+		imagenes.size().times({ i => game.addVisual(new Icono())})
 	}
 
 }
