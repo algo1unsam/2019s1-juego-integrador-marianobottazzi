@@ -19,7 +19,6 @@ object scheduler {
 object tablero {
 
 	var property todasLasImagenes = []
-	var property niveles = [ nivelUno, nivelDos, nivelTres ]
 
 	method repartirImagen() {
 		var img = todasLasImagenes.anyOne()
@@ -27,40 +26,24 @@ object tablero {
 		return img
 	}
 
-	method nivelActual() {
-		var nivel = niveles.first()
-		niveles.remove(nivel)
-		if(niveles.asSet().isEmpty())
-			niveles.addAll([nivelUno, nivelDos, nivelTres]) 
-		return nivel
-		}
 }
 
 object player {
 
 	var cont = 0
-	var nivel = tablero.nivelActual()
+	var property nivel = null
 	var property imagenesElegidas = []
 	var property position = game.origin()
 
 	method image() = "mano1.png"
 
 	method move(nuevaPosicion) {
-		if ((nuevaPosicion.x() >= 0 && nuevaPosicion.x() <= 9) && (nuevaPosicion.y() >= 0 && nuevaPosicion.y() <= 9)) 
-			self.position(nuevaPosicion)
-		else 
-			game.say(self, "me voy a caer del tablero!") 
-		}
+		if ((nuevaPosicion.x() >= 0 && nuevaPosicion.x() <= 9) && (nuevaPosicion.y() >= 0 && nuevaPosicion.y() <= 9)) self.position(nuevaPosicion) else game.say(self, "me voy a caer del tablero!")
+	}
 
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
 
 	method elementoAca() = game.colliders(self).first()
-
-	method ver() {
-		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
-			self.comprobarEleccion(self.elementoAca())
-		}
-	}
 
 	method cambiarConDelay(unaImagen, milisegundos) {
 		scheduler.schedule(milisegundos, { => unaImagen.cambiarLado()})
@@ -90,9 +73,14 @@ object player {
 			}
 		}
 	}
+	
+	method ver() {
+		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
+			self.comprobarEleccion(self.elementoAca())
+		}
+	}
 
 }
-
 
 object ubicacion {
 
@@ -158,11 +146,19 @@ object nivelTres {
 
 }
 
-
 object inicio {
-	
+
+	var property niveles = [ nivelUno, nivelDos, nivelTres ]
+
+	method nivelActual() {
+		if (niveles.asSet().isEmpty()) niveles.addAll([ nivelUno, nivelDos, nivelTres ])
+		var nivel = niveles.first()
+		niveles.remove(nivel)
+		return nivel
+	}
+
 	method iniciarNivel(imagenes, posiciones) {
-		game.boardGround("fondo1.jpg")
+		player.nivel(self.nivelActual())
 		tablero.todasLasImagenes().addAll(imagenes)
 		ubicacion.todasLasPosiciones().addAll(posiciones)
 		game.addVisual(player)
