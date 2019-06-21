@@ -2,20 +2,11 @@ import wollok.game.*
 import iconos.*
 import player.*
 
-program laGranjaGame {
-//	CONFIG	
+program juegoDeLaMemoria {
 	game.title("El juego de la memoria")
 	game.height(10)
 	game.width(10)
 	game.boardGround("fondo1.jpg")
 	inicio.iniciarNivel(nivelUno.imagenes(), nivelUno.posiciones())
-//	TECLADO
-	keyboard.up().onPressDo{ player.move(player.position().up(1)); }
-	keyboard.down().onPressDo{ player.move(player.position().down(1)); }
-	keyboard.left().onPressDo{ player.move(player.position().left(1)); }
-	keyboard.right().onPressDo{ player.move(player.position().right(1)); }
-	keyboard.space().onPressDo{ player.ver() }
-//	START
-	game.errorReporter(player)
 	game.start()
 }
