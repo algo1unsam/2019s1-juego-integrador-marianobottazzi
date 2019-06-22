@@ -16,31 +16,30 @@ object scheduler {
 
 }
 
-object tablero {
-
-	var property todasLasImagenes = []
-
-	method repartirImagen() {
-		var img = todasLasImagenes.anyOne()
-		todasLasImagenes.remove(img)
-		return img
-	}
-
-}
-
-
-object ubicacion {
-
-	var property todasLasPosiciones = #{}
-
-	method repartirPosicion() {
-		var pos = todasLasPosiciones.anyOne()
-		todasLasPosiciones.remove(pos)
-		return pos
-	}
-
-}
-
+//object tablero {
+//
+//	var property todasLasImagenes = []
+//
+//	method repartirImagen() {
+//		var img = todasLasImagenes.anyOne()
+//		todasLasImagenes.remove(img)
+//		return img
+//	}
+//
+//}
+//
+//
+//object ubicacion {
+//
+//	var property todasLasPosiciones = #{}
+//
+//	method repartirPosicion() {
+//		var pos = todasLasPosiciones.anyOne()
+//		todasLasPosiciones.remove(pos)
+//		return pos
+//	}
+//
+//}
 object player {
 
 	var cont = 0
@@ -87,7 +86,7 @@ object player {
 			}
 		}
 	}
-	
+
 	method comprobarFinDeNivel(unNivel, contador) {
 		console.println(contador)
 		if (contador == unNivel.imagenes().size() / 2) {
@@ -97,8 +96,8 @@ object player {
 				inicio.iniciarNivel(nivelSiguiente)
 			})
 		}
-	}	
-	
+	}
+
 	method ver() {
 		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
 			self.comprobarEleccion(self.elementoAca())
@@ -130,28 +129,26 @@ object nivelTres {
 
 object inicio {
 
-	var property niveles = [ nivelUno, nivelDos, nivelTres ]
-
+	var tablero = []
+	var niveles = [nivelDos, nivelTres, nivelUno]
+	
 	method nivelSiguiente() {
-		if (niveles.asSet().isEmpty()) niveles.addAll([ nivelDos, nivelTres, nivelUno ])
-		var nivel = niveles.first()
-		niveles.remove(nivel)
-		return nivel
+		if(niveles.asSet().isEmpty()) niveles.addAll([nivelDos, nivelTres, nivelUno])
+		var niv = niveles.first()
+		niveles.remove(niv)
+		return niv
 	}
 
 	method iniciarNivel(unNivel) {
-		player.nivelActual(unNivel)
-		player.nivelSiguiente(self.nivelSiguiente())
-		tablero.todasLasImagenes().addAll(unNivel.imagenes())
-		ubicacion.todasLasPosiciones().addAll(unNivel.posiciones())
 		game.addVisual(player)
 		keyboard.up().onPressDo{ player.move(player.position().up(1));}
 		keyboard.down().onPressDo{ player.move(player.position().down(1));}
 		keyboard.left().onPressDo{ player.move(player.position().left(1));}
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
-		unNivel.imagenes().size().times({ i => game.addVisual(new Icono())})
+		unNivel.imagenes().size().times({ i => game.addVisual ({ var ficha = new Icono(); 
+			tablero.add(ficha) }) })
 	}
-	
+
 }
 
