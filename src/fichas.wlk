@@ -1,15 +1,20 @@
-import player.*
 import wollok.game.*
+import player.*
+import niveles.*
 
 class Ficha {
 	
-	var tapado = true
-	var niveles = [nivelDos, nivelTres, nivelUno]
-	var nivel = niveles.first()
+	var nivel
+	var property tapado = true
 	var imagen = self.asignarImagen(nivel)
+ 	var posicion = self.asignarPosicion(nivel)
  	
-	method cambiar() {
-		if(tapado) tapado = !tapado
+	method tapar() {
+		tapado = true
+	}
+	
+	method destapar() {
+		tapado = false
 	}
 	
 	method asignarImagen(unNivel) {
@@ -29,7 +34,7 @@ class Ficha {
 		else return imagen
 	}
 	
-	method position() = self.asignarPosicion(nivel)
+	method position() = posicion
 	
 	
 }
