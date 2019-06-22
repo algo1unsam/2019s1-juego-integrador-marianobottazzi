@@ -4,10 +4,10 @@ import niveles.*
 
 class Ficha {
 	
-	var nivel
+	const nivel
+	var property position = self.asignarPosicion(nivel)
 	var property tapado = true
 	var imagen = self.asignarImagen(nivel)
- 	var posicion = self.asignarPosicion(nivel)
  	
 	method tapar() {
 		tapado = true
@@ -33,8 +33,5 @@ class Ficha {
 		if(tapado) return "tapa.jpg"
 		else return imagen
 	}
-	
-	method position() = posicion
-	
 	
 }
