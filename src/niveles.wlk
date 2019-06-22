@@ -52,7 +52,7 @@ object inicio {
 	}
 
 
-	method todasDestapadas() = tablero.all({ ficha => !ficha.tapado() })
+	method todasDestapadas() = tablero.all({ ficha => !ficha.tapada() })
 
 }
 

@@ -6,31 +6,31 @@ class Ficha {
 	
 	const nivel
 	var property position = self.asignarPosicion(nivel)
-	var property tapado = true
+	var property tapada = true
 	var imagen = self.asignarImagen(nivel)
  	
 	method tapar() {
-		tapado = true
+		tapada = true
 	}
 	
 	method destapar() {
-		tapado = false
+		tapada = false
 	}
 	
 	method asignarImagen(unNivel) {
-		var img = nivel.imagenes().anyOne()
-		nivel.imagenes().remove(img)
+		var img = unNivel.imagenes().anyOne()
+		unNivel.imagenes().remove(img)
 		return img
 	}
 	
 	method asignarPosicion(unNivel) {
-		var pos = nivel.posiciones().anyOne()
-		nivel.posiciones().remove(pos)
+		var pos = unNivel.posiciones().anyOne()
+		unNivel.posiciones().remove(pos)
 		return pos
 	}
 	
 	method image() {
-		if(tapado) return "tapa.jpg"
+		if(tapada) return "tapa.jpg"
 		else return imagen
 	}
 	
