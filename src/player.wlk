@@ -48,8 +48,8 @@ object player {
 	}
 
 	method restaurarFichas() {
-		imagenesElegidas.forEach({ img => self.taparConDelay(img, 1000)})
-		imagenesElegidas.clear()
+		parDeFichas.forEach({ img => self.taparConDelay(img, 1000)})
+		parDeFichas.clear()
 	}
 
 	method elegir(unaFicha) {
@@ -63,17 +63,23 @@ object player {
 
 	method todasDestapadas() = fichasDestapadas.size() == nivel.imagenes().size()
 
+	method terminoElNIvel() {
+		self.restaurarFichas()
+		scheduler.schedule(1000, { => 
+		game.clear();
+		inicio.iniciarNivel(inicio.nivelSiguiente())	
+		})
+	}
+
 	method resultado(unaFicha) {
 		if(parDeFichas.size() < 2) self.elegir(unaFicha)
 		else {
-			if(self.comparacion()) fichasDestapadas.addAll(parDeFichas)
+			if(self.comparacion()) {
+				fichasDestapadas.addAll(parDeFichas)
+				if(self.todasDestapadas()) 
+					self.terminoElNIvel()
+				}
 			else self.restaurarFichas()
-			if(self.todasDestapadas()) {
-				scheduler.schedule(2000, { => 
-				game.clear();
-				inicio.iniciarNivel(inicio.nivelSiguiente())	
-				})
-			}
 		}
 	}
 
