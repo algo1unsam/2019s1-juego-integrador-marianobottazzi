@@ -4,8 +4,12 @@ import niveles.*
 
 class Ficha {
 	
+	
 	var property position = null
 	var property imagen = null
+//	var nivel
+//	var property position = self.asignarPosicion(nivel)
+//	var property imagen = self.asignarImagen(nivel)
  	var property tapada = true
  	
 	method tapar() {

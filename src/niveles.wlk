@@ -34,7 +34,7 @@ object inicio {
 		niveles.remove(niv)
 		return niv
 	}
-
+	
 	method iniciarNivel(unNivel) {
 		game.addVisual(player)
 		keyboard.up().onPressDo{ player.move(player.position().up(1));}
@@ -42,7 +42,7 @@ object inicio {
 		keyboard.left().onPressDo{ player.move(player.position().left(1));}
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
-		player.nivel(unNivel)
+		player.nivelJugando(unNivel)
 		unNivel.imagenes().size().times({ i => 
 			var ficha = new Ficha()
 			ficha.position(ficha.asignarPosicion(unNivel))

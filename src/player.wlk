@@ -19,10 +19,9 @@ object scheduler {
 
 object player {
 	
-	var property nivel = null
+	var property nivelJugando = null
 	var parDeFichas = []
 	var fichasDestapadas = []
-	var property imagenesElegidas = []
 	var property position = game.origin()
 
 	method image() = "mano1.png"
@@ -34,52 +33,46 @@ object player {
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
 
 	method elementoAca() = game.colliders(self).first()
-
-	method agregarImagen(unaFicha) {
-		imagenesElegidas.add(unaFicha)
-	}
-
-	method tamanioLista(unTamanio) = imagenesElegidas.size() == unTamanio
-
-	method coincidencia() = imagenesElegidas.first().imagen2() == imagenesElegidas.get(1).imagen2()
 	
-	method taparConDelay(unaFicha, milisegundos) {
-		scheduler.schedule(milisegundos, { => unaFicha.tapar()})
-	}
-
-	method restaurarFichas() {
-		parDeFichas.forEach({ img => self.taparConDelay(img, 1000)})
-		parDeFichas.clear()
-	}
-
 	method elegir(unaFicha) {
 		if(!fichasDestapadas.contains(unaFicha)) {
-			parDeFichas.add(unaFicha)
 			unaFicha.destapar()
+			parDeFichas.add(unaFicha)
 		}
+	}
+	
+	method taparFichasElegidas() {
+		scheduler.schedule(500, { => 
+			parDeFichas.forEach({ ficha => ficha.tapar() })
+		})
 	}
 
 	method comparacion() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
 
-	method todasDestapadas() = fichasDestapadas.size() == nivel.imagenes().size()
+	method todasDestapadas() = fichasDestapadas.size() == nivelJugando.imagenes().size()
 
 	method terminoElNIvel() {
-		self.restaurarFichas()
+		fichasDestapadas.clear()
 		scheduler.schedule(1000, { => 
-		game.clear();
-		inicio.iniciarNivel(inicio.nivelSiguiente())	
+			game.clear();
+			inicio.iniciarNivel(inicio.nivelSiguiente())	
 		})
 	}
 
 	method resultado(unaFicha) {
-		if(parDeFichas.size() < 2) self.elegir(unaFicha)
+		if(parDeFichas.size() < 2) 
+			self.elegir(unaFicha)
 		else {
 			if(self.comparacion()) {
 				fichasDestapadas.addAll(parDeFichas)
+				parDeFichas.clear()
 				if(self.todasDestapadas()) 
 					self.terminoElNIvel()
 				}
-			else self.restaurarFichas()
+			else {
+				self.taparFichasElegidas()
+				parDeFichas.clear()
+				}
 		}
 	}
 
