@@ -18,7 +18,7 @@ object scheduler {
 }
 
 object player {
-	
+
 	var property nivelJugando = null
 	var parDeFichas = []
 	var fichasDestapadas = []
@@ -33,18 +33,16 @@ object player {
 	method acaNoHayNada() = game.colliders(self).asSet().isEmpty()
 
 	method elementoAca() = game.colliders(self).first()
-	
+
 	method elegir(unaFicha) {
-		if(!fichasDestapadas.contains(unaFicha)) {
+		if (!fichasDestapadas.contains(unaFicha)) {
 			unaFicha.destapar()
 			parDeFichas.add(unaFicha)
 		}
 	}
-	
+
 	method taparFichasElegidas() {
-		scheduler.schedule(500, { => 
-			parDeFichas.forEach({ ficha => ficha.tapar() })
-		})
+		scheduler.schedule(500, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
 	}
 
 	method comparacion() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
@@ -53,32 +51,29 @@ object player {
 
 	method terminoElNIvel() {
 		fichasDestapadas.clear()
-		scheduler.schedule(1000, { => 
-			game.clear();
-			inicio.iniciarNivel(inicio.nivelSiguiente())	
+		scheduler.schedule(1000, { =>
+			game.clear()
+		;
+			inicio.iniciarNivel(inicio.nivelSiguiente())
 		})
 	}
 
 	method resultado(unaFicha) {
-		if(parDeFichas.size() < 2) 
-			self.elegir(unaFicha)
-		else {
-			if(self.comparacion()) {
+		if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
+			if (self.comparacion()) {
 				fichasDestapadas.addAll(parDeFichas)
 				parDeFichas.clear()
-				if(self.todasDestapadas()) 
-					self.terminoElNIvel()
-				}
-			else {
+				if (self.todasDestapadas()) self.terminoElNIvel()
+			} else {
 				self.taparFichasElegidas()
 				parDeFichas.clear()
-				}
+			}
 		}
 	}
 
 	method ver() {
-		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") 
-		else self.resultado(self.elementoAca())
+		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else self.resultado(self.elementoAca())
 	}
 
 }
+
