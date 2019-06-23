@@ -19,6 +19,9 @@ object scheduler {
 
 object player {
 	
+	var property nivel = null
+	var parDeFichas = []
+	var fichasDestapadas = []
 	var property imagenesElegidas = []
 	var property position = game.origin()
 
@@ -38,37 +41,45 @@ object player {
 
 	method tamanioLista(unTamanio) = imagenesElegidas.size() == unTamanio
 
-	method coincidencia() = imagenesElegidas.first().imagen2() == imagenesElegidas.get(1).imagen2() // imagenes.all({ img => img.image() })
-
+	method coincidencia() = imagenesElegidas.first().imagen2() == imagenesElegidas.get(1).imagen2()
+	
 	method taparConDelay(unaFicha, milisegundos) {
 		scheduler.schedule(milisegundos, { => unaFicha.tapar()})
 	}
 
-	method restaurarImagenes() {
+	method restaurarFichas() {
 		imagenesElegidas.forEach({ img => self.taparConDelay(img, 1000)})
 		imagenesElegidas.clear()
 	}
 
-	method comprobarEleccion(unaFicha) {
-		self.agregarImagen(unaFicha)
-		unaFicha.destapar()
-		if (self.tamanioLista(2)) {
-			if (!self.coincidencia()) self.restaurarImagenes() else {
-				imagenesElegidas.clear()
-				if(inicio.todasDestapadas()) { 
-					scheduler.schedule(2000, { => 
-					game.clear();
-					inicio.iniciarNivel(inicio.nivelSiguiente())	
-					})
-				}
+	method elegir(unaFicha) {
+		if(!fichasDestapadas.contains(unaFicha)) {
+			parDeFichas.add(unaFicha)
+			unaFicha.destapar()
+		}
+	}
+
+	method comparacion() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
+
+	method todasDestapadas() = fichasDestapadas.size() == nivel.imagenes().size()
+
+	method resultado(unaFicha) {
+		if(parDeFichas.size() < 2) self.elegir(unaFicha)
+		else {
+			if(self.comparacion()) fichasDestapadas.addAll(parDeFichas)
+			else self.restaurarFichas()
+			if(self.todasDestapadas()) {
+				scheduler.schedule(2000, { => 
+				game.clear();
+				inicio.iniciarNivel(inicio.nivelSiguiente())	
+				})
 			}
 		}
 	}
 
 	method ver() {
-		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else {
-			self.comprobarEleccion(self.elementoAca())
-		}
+		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") 
+		else self.resultado(self.elementoAca())
 	}
 
 }

@@ -26,7 +26,6 @@ object nivelTres {
 
 object inicio {
 
-	var tablero = []
 	var niveles = [nivelDos, nivelTres, nivelUno]
 	
 	method nivelSiguiente() {
@@ -37,22 +36,20 @@ object inicio {
 	}
 
 	method iniciarNivel(unNivel) {
-		tablero.clear()
 		game.addVisual(player)
 		keyboard.up().onPressDo{ player.move(player.position().up(1));}
 		keyboard.down().onPressDo{ player.move(player.position().down(1));}
 		keyboard.left().onPressDo{ player.move(player.position().left(1));}
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
+		player.nivel(unNivel)
 		unNivel.imagenes().size().times({ i => 
-			var ficha = new Ficha(nivel = unNivel)
+			var ficha = new Ficha()
+			ficha.position(ficha.asignarPosicion(unNivel))
+			ficha.imagen(ficha.asignarImagen(unNivel))
 			game.addVisual (ficha)
-			tablero.add(ficha)
 		})
 	}
-
-
-	method todasDestapadas() = tablero.all({ ficha => !ficha.tapada() })
 
 }
 
