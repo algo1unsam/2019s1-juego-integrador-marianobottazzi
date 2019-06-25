@@ -2,7 +2,7 @@ import wollok.game.*
 import fichas.*
 import niveles.*
 
-object scheduler {
+object scheduler { // no esta funcionando bien
 
 	var count = 0
 
@@ -20,6 +20,7 @@ object scheduler {
 object player {
 
 	var property nivelJugando = null
+	var property tamanioNivel = null
 	var property parDeFichas = []
 	var property fichasDestapadas = []
 	var property position = game.origin()
@@ -51,16 +52,22 @@ object player {
 
 	method sonIguales() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen() && parDeFichas.first().position() != parDeFichas.get(1).position()
 	
-	method nivelCompleto() = fichasDestapadas.size() == self.nivelJugando().imagenes().size()
-
+	method nivelCompleto() = fichasDestapadas.size() == tamanioNivel
+	
 	method terminoElNIvel() {
 		fichasDestapadas.clear()
-		game.say(self, "NIVEL TERMINADO !!")
-//		scheduler.schedule(1000, { =>
+		if(nivelJugando == nivelTres) {
 			game.clear()
-//		;
-			inicio.iniciarNivel(inicio.nivelSiguiente())
-//		})
+			game.say(self, "GANASTE EL JUEGO!! ")
+		}
+		else {
+			game.say(self, "NIVEL TERMINADO !!")
+			scheduler.schedule(1000, { =>
+				game.clear()
+			;
+				inicio.iniciarNivel(inicio.nivelSiguiente())
+			})
+		}
 	}
 
 	method resultado(unaFicha) {
@@ -73,7 +80,7 @@ object player {
 			} else { 
 				self.taparFichasElegidas()
 				parDeFichas.clear()
-				}
+			}
 		}
 	}
 

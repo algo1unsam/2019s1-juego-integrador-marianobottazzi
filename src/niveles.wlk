@@ -31,10 +31,9 @@ object inicio {
 	var property niveles = [nivelUno, nivelDos, nivelTres]
 	
 	method nivelSiguiente() {
-		var niv = niveles.get(cont)
-		cont++
 		if(cont >2) cont = 0
-		return niv
+		else cont++
+		return niveles.get(cont)
 	}
 	
 	method asignarImagen(unNivel) {
@@ -57,6 +56,7 @@ object inicio {
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
 		player.nivelJugando(unNivel)
+		player.tamanioNivel(unNivel.imagenes().size())
 		unNivel.imagenes().size().times({ i => 
 			game.addVisual(new Ficha(position = self.asignarPosicion(unNivel), imagen = self.asignarImagen(unNivel)))
 		})
