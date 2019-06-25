@@ -17,8 +17,6 @@ class Ficha {
 		tapada = false
 	}
 	
-	
-	
 	method image() {
 		if(tapada) return "tapa.jpg"
 		else return imagen

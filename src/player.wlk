@@ -20,8 +20,8 @@ object scheduler {
 object player {
 
 	var property nivelJugando = null
-	var parDeFichas = []
-	var fichasDestapadas = []
+	var property parDeFichas = []
+	var property fichasDestapadas = []
 	var property position = game.origin()
 
 	method image() = "mano1.png"
@@ -35,38 +35,41 @@ object player {
 	method elementoAca() = game.colliders(self).first()
 
 	method elegir(unaFicha) {
-		if (!fichasDestapadas.contains(unaFicha)) {
+		if (fichasDestapadas.asSet().isEmpty()) {
+			unaFicha.destapar()
+			parDeFichas.add(unaFicha)
+		} else if (!fichasDestapadas.contains(unaFicha)) {
 			unaFicha.destapar()
 			parDeFichas.add(unaFicha)
 		}
 	}
 
 	method taparFichasElegidas() {
-		scheduler.schedule(500, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
+//		scheduler.schedule(500, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
+		parDeFichas.forEach({ ficha => ficha.tapar() })
 	}
 
-	method comparacion() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
+	method sonIguales() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
 
-	method todasDestapadas() = fichasDestapadas.size() == nivelJugando.imagenes().size()
+	method nivelCompleto() = fichasDestapadas.size() == nivelJugando.imagenes().size()
 
 	method terminoElNIvel() {
 		fichasDestapadas.clear()
-		scheduler.schedule(1000, { =>
-			game.clear();
+//		scheduler.schedule(1000, { =>
+//			game.clear()
+//		;
 			inicio.iniciarNivel(inicio.nivelSiguiente())
-		})
+//		})
 	}
 
 	method resultado(unaFicha) {
-		if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
-			if (self.comparacion()) {
+		self.elegir(unaFicha)
+		if (parDeFichas.size() == 2) {
+			if (self.sonIguales()) {
 				fichasDestapadas.addAll(parDeFichas)
-				parDeFichas.clear()
-				if (self.todasDestapadas()) self.terminoElNIvel()
-			} else {
-				self.taparFichasElegidas()
-				parDeFichas.clear()
-			}
+				if (self.nivelCompleto()) self.terminoElNIvel()
+			} else self.taparFichasElegidas()
+			parDeFichas.clear()
 		}
 	}
 
