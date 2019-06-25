@@ -35,6 +35,18 @@ object inicio {
 		return niv
 	}
 	
+	method asignarImagen(unNivel) {
+		var img = unNivel.imagenes().anyOne()
+		unNivel.imagenes().remove(img)
+		return img
+	}
+	
+	method asignarPosicion(unNivel) {
+		var pos = unNivel.posiciones().anyOne()
+		unNivel.posiciones().remove(pos)
+		return pos
+	}
+	
 	method iniciarNivel(unNivel) {
 		game.addVisual(player)
 		keyboard.up().onPressDo{ player.move(player.position().up(1));}
@@ -44,10 +56,7 @@ object inicio {
 		keyboard.space().onPressDo{ player.ver()}
 		player.nivelJugando(unNivel)
 		unNivel.imagenes().size().times({ i => 
-			var ficha = new Ficha()
-			ficha.position(ficha.asignarPosicion(unNivel))
-			ficha.imagen(ficha.asignarImagen(unNivel))
-			game.addVisual (ficha)
+			game.addVisual(new Ficha(position = self.asignarPosicion(unNivel), imagen = self.asignarImagen(unNivel)))
 		})
 	}
 

@@ -52,23 +52,20 @@ object player {
 	method terminoElNIvel() {
 		fichasDestapadas.clear()
 		scheduler.schedule(1000, { =>
-			game.clear()
-		;
+			game.clear();
 			inicio.iniciarNivel(inicio.nivelSiguiente())
 		})
 	}
 
 	method resultado(unaFicha) {
-		if (self.todasDestapadas()) self.terminoElNIvel()
-		else {
-			if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
-				if (self.comparacion()) {
-					fichasDestapadas.addAll(parDeFichas)
-					parDeFichas.clear()
-				} else {
-					self.taparFichasElegidas()
-					parDeFichas.clear()
-				}
+		if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
+			if (self.comparacion()) {
+				fichasDestapadas.addAll(parDeFichas)
+				parDeFichas.clear()
+				if (self.todasDestapadas()) self.terminoElNIvel()
+			} else {
+				self.taparFichasElegidas()
+				parDeFichas.clear()
 			}
 		}
 	}
