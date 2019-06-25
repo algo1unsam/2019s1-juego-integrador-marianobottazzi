@@ -59,14 +59,16 @@ object player {
 	}
 
 	method resultado(unaFicha) {
-		if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
-			if (self.comparacion()) {
-				fichasDestapadas.addAll(parDeFichas)
-				parDeFichas.clear()
-				if (self.todasDestapadas()) self.terminoElNIvel()
-			} else {
-				self.taparFichasElegidas()
-				parDeFichas.clear()
+		if (self.todasDestapadas()) self.terminoElNIvel()
+		else {
+			if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
+				if (self.comparacion()) {
+					fichasDestapadas.addAll(parDeFichas)
+					parDeFichas.clear()
+				} else {
+					self.taparFichasElegidas()
+					parDeFichas.clear()
+				}
 			}
 		}
 	}
