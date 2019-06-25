@@ -45,18 +45,19 @@ object player {
 	}
 
 	method taparFichasElegidas() {
-//		scheduler.schedule(500, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
+//		scheduler.schedule(1000, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
 		parDeFichas.forEach({ ficha => ficha.tapar() })
 	}
 
-	method sonIguales() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
-
-	method nivelCompleto() = fichasDestapadas.size() == nivelJugando.imagenes().size()
+	method sonIguales() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen() && parDeFichas.first().position() != parDeFichas.get(1).position()
+	
+	method nivelCompleto() = fichasDestapadas.size() == self.nivelJugando().imagenes().size()
 
 	method terminoElNIvel() {
 		fichasDestapadas.clear()
+		game.say(self, "NIVEL TERMINADO !!")
 //		scheduler.schedule(1000, { =>
-//			game.clear()
+			game.clear()
 //		;
 			inicio.iniciarNivel(inicio.nivelSiguiente())
 //		})
@@ -67,14 +68,19 @@ object player {
 		if (parDeFichas.size() == 2) {
 			if (self.sonIguales()) {
 				fichasDestapadas.addAll(parDeFichas)
+				parDeFichas.clear()
 				if (self.nivelCompleto()) self.terminoElNIvel()
-			} else self.taparFichasElegidas()
-			parDeFichas.clear()
+			} else { 
+				self.taparFichasElegidas()
+				parDeFichas.clear()
+				}
 		}
 	}
 
 	method ver() {
-		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else self.resultado(self.elementoAca())
+		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") 
+		else 
+			self.resultado(self.elementoAca())
 	}
 
 }

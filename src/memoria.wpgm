@@ -8,7 +8,7 @@ program juegoDeLaMemoria {
 	game.height(10)
 	game.width(10)
 	game.boardGround("fondo1.jpg")
-	inicio.iniciarNivel(nivelUno)
-	
+	inicio.nivelAJugar(nivelUno)
+	inicio.iniciarNivel(inicio.nivelAJugar())
 	game.start()
 }

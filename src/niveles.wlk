@@ -26,12 +26,14 @@ object nivelTres {
 
 object inicio {
 
-	var niveles = [nivelDos, nivelTres, nivelUno]
+	var cont = 0
+	var property nivelAJugar = null
+	var property niveles = [nivelUno, nivelDos, nivelTres]
 	
 	method nivelSiguiente() {
-		if(niveles.asSet().isEmpty()) niveles.addAll([nivelDos, nivelTres, nivelUno])
-		var niv = niveles.first()
-		niveles.remove(niv)
+		var niv = niveles.get(cont)
+		cont++
+		if(cont >2) cont = 0
 		return niv
 	}
 	
