@@ -58,15 +58,16 @@ object player {
 		fichasDestapadas.clear()
 		if(nivelJugando == nivelTres) {
 			game.clear()
+			game.addVisual(self)
 			game.say(self, "GANASTE EL JUEGO!! ")
 		}
 		else {
-			game.say(self, "NIVEL TERMINADO !!")
-			scheduler.schedule(1000, { =>
-				game.clear()
-			;
-				inicio.iniciarNivel(inicio.nivelSiguiente())
-			})
+		game.say(self, "NIVEL TERMINADO !!")
+		scheduler.schedule(1000, { =>
+			game.clear()
+		;
+			inicio.iniciarNivel(inicio.nivelSiguiente())
+		})
 		}
 	}
 
