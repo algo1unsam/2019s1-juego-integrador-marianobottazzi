@@ -65,7 +65,7 @@ object player {
 		}
 		else {
 		game.say(self, "NIVEL TERMINADO !!")
-		scheduler.schedule(1000, { =>
+		game.onTick(1000, "terminado", { =>
 			game.clear()
 			inicio.iniciarNivel(inicio.nivelSiguiente())
 		})
