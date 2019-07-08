@@ -1,0 +1,41 @@
+import wollok.game.*
+import player.*
+import niveles.*
+import fichas.*
+
+
+object nivelCuatro { 
+	var property imagenes = ["youtube.jpg", "steam.jpg", "youtube.jpg", "steam.jpg"] 
+	var property posiciones = #{game.at(2, 2), game.at(2, 4), game.at(2, 6), game.at(2, 8)}
+}
+
+test "resultado" {
+
+inicio.iniciarNivel(nivelCuatro)
+
+var ficha1 = new Ficha(position = game.at(2, 2), imagen = "youtube.jpg")
+var ficha2 = new Ficha(position = game.at(4, 2), imagen = "youtube.jpg")
+var ficha3 = new Ficha(position = game.at(2, 4), imagen = "steam.jpg")
+var ficha4 = new Ficha(position = game.at(2, 4), imagen = "steam.jpg")
+
+player.resultado(ficha1)
+player.resultado(ficha2)
+player.resultado(ficha3)
+player.resultado(ficha4)
+
+
+//	assert.that(player.parDeFichas().contains(ficha1))
+//	assert.that(player.parDeFichas().contains(ficha3))
+	
+//	assert.that(player.parDeFichas().asSet().isEmpty())
+
+//	assert.that(player.fichasDestapadas().contains(ficha1))
+//	assert.that(player.fichasDestapadas().contains(ficha2))
+//	assert.that(player.fichasDestapadas().contains(ficha3))
+//	assert.that(player.fichasDestapadas().contains(ficha4))
+//	
+//	assert.that(player.parDeFichas().asSet().isEmpty())
+	
+	assert.equals(nivelCuatro, player.nivelJugando())
+	
+}

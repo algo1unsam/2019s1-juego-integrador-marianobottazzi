@@ -26,13 +26,26 @@ object nivelTres {
 
 object inicio {
 
-	var niveles = [nivelDos, nivelTres, nivelUno]
+	var cont = 0
+	var property nivelAJugar = null
+	var property niveles = [nivelUno, nivelDos, nivelTres]
 	
 	method nivelSiguiente() {
-		if(niveles.asSet().isEmpty()) niveles.addAll([nivelDos, nivelTres, nivelUno])
-		var niv = niveles.first()
-		niveles.remove(niv)
-		return niv
+		if(cont >2) cont = 0
+		else cont++
+		return niveles.get(cont)
+	}
+	
+	method asignarImagen(unNivel) {
+		var img = unNivel.imagenes().anyOne()
+		unNivel.imagenes().remove(img)
+		return img
+	}
+	
+	method asignarPosicion(unNivel) {
+		var pos = unNivel.posiciones().anyOne()
+		unNivel.posiciones().remove(pos)
+		return pos
 	}
 	
 	method iniciarNivel(unNivel) {
@@ -43,11 +56,9 @@ object inicio {
 		keyboard.right().onPressDo{ player.move(player.position().right(1));}
 		keyboard.space().onPressDo{ player.ver()}
 		player.nivelJugando(unNivel)
+		player.tamanioNivel(unNivel.imagenes().size())
 		unNivel.imagenes().size().times({ i => 
-			var ficha = new Ficha()
-			ficha.position(ficha.asignarPosicion(unNivel))
-			ficha.imagen(ficha.asignarImagen(unNivel))
-			game.addVisual (ficha)
+			game.addVisual(new Ficha(position = self.asignarPosicion(unNivel), imagen = self.asignarImagen(unNivel)))
 		})
 	}
 

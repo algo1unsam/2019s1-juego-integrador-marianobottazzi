@@ -1,12 +1,14 @@
 import wollok.game.*
 import player.*
 import niveles.*
+import fichas.*
 
 program juegoDeLaMemoria {
 	game.title("El juego de la memoria")
 	game.height(10)
 	game.width(10)
 	game.boardGround("fondo1.jpg")
-	inicio.iniciarNivel(nivelUno)
+	inicio.nivelAJugar(nivelUno)
+	inicio.iniciarNivel(inicio.nivelAJugar())
 	game.start()
 }

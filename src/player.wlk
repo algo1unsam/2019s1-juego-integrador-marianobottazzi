@@ -2,7 +2,7 @@ import wollok.game.*
 import fichas.*
 import niveles.*
 
-object scheduler {
+object scheduler { // no esta funcionando bien
 
 	var count = 0
 
@@ -20,8 +20,9 @@ object scheduler {
 object player {
 
 	var property nivelJugando = null
-	var parDeFichas = []
-	var fichasDestapadas = []
+	var property tamanioNivel = null
+	var property parDeFichas = []
+	var property fichasDestapadas = []
 	var property position = game.origin()
 
 	method image() = "mano1.png"
@@ -35,44 +36,58 @@ object player {
 	method elementoAca() = game.colliders(self).first()
 
 	method elegir(unaFicha) {
-		if (!fichasDestapadas.contains(unaFicha)) {
+		if (fichasDestapadas.asSet().isEmpty()) {
+			unaFicha.destapar()
+			parDeFichas.add(unaFicha)
+		} else if (!fichasDestapadas.contains(unaFicha)) {
 			unaFicha.destapar()
 			parDeFichas.add(unaFicha)
 		}
 	}
 
 	method taparFichasElegidas() {
-		scheduler.schedule(500, { => parDeFichas.forEach({ ficha => ficha.tapar()})})
-	}
-
-	method comparacion() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen()
-
-	method todasDestapadas() = fichasDestapadas.size() == nivelJugando.imagenes().size()
-
-	method terminoElNIvel() {
-		fichasDestapadas.clear()
-		scheduler.schedule(1000, { =>
-			game.clear()
-		;
-			inicio.iniciarNivel(inicio.nivelSiguiente())
+		scheduler.schedule(500, { => 
+			parDeFichas.forEach({ ficha => ficha.tapar()})
+			parDeFichas.clear()
 		})
 	}
 
+	method sonIguales() = parDeFichas.first().imagen() == parDeFichas.get(1).imagen() && parDeFichas.first().position() != parDeFichas.get(1).position()
+	
+	method nivelCompleto() = fichasDestapadas.size() == tamanioNivel
+	
+	method terminoElNIvel() {
+		fichasDestapadas.clear()
+		if(nivelJugando == nivelTres) {
+			game.clear()
+			game.addVisual(self)
+			game.say(self, "GANASTE EL JUEGO!! ")
+		}
+		else {
+		game.say(self, "NIVEL TERMINADO !!")
+		game.onTick(1000, "terminado", { =>
+			game.clear()
+			inicio.iniciarNivel(inicio.nivelSiguiente())
+		})
+		}
+	}
+
 	method resultado(unaFicha) {
-		if (parDeFichas.size() < 2) self.elegir(unaFicha) else {
-			if (self.comparacion()) {
+		self.elegir(unaFicha)
+		if (parDeFichas.size() == 2) {
+			if (self.sonIguales()) {
 				fichasDestapadas.addAll(parDeFichas)
 				parDeFichas.clear()
-				if (self.todasDestapadas()) self.terminoElNIvel()
-			} else {
+				if (self.nivelCompleto()) self.terminoElNIvel()
+			} else 
 				self.taparFichasElegidas()
-				parDeFichas.clear()
-			}
 		}
 	}
 
 	method ver() {
-		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") else self.resultado(self.elementoAca())
+		if (self.acaNoHayNada()) game.say(self, "aca no hay nada") 
+		else 
+			self.resultado(self.elementoAca())
 	}
 
 }
